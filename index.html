@@ -1,0 +1,624 @@
+<html>
+<head>
+<title>EtherChat</title>
+<script src="./node_modules/web3/dist/web3.min.js"></script>
+</head>
+<body style="background-color:powderblue;">
+
+
+
+<div style="border-style:solid;border-width:1px;float:right;">
+<var style="">Insert the address of the EtherChat Contract:</var>
+<input id="c_address"style="width:300px;height:20px;" value="0x14B94c46E2B8971361AB9B70d8482d732C4cfA68"></input>
+<button style="height:20px;" onclick="add_contract()">Add</button><br>
+<var style="">Contract Address:</var> <var style="background-color:#87CEEB;"id=co_address>0x14B94c46E2B8971361AB9B70d8482d732C4cfA68</var><br>
+<var style="">Contract Creator:</var><var style="background-color:#87CEEB;"id="creator">0x123...</var>
+<br>
+<var style="">Ether in Contract:</var> <var style="background-color:#87CEEB;"id=money></var><br>
+<var>Block Number:</var><var style="background-color:#87CEEB;margin-left:23px;"id="block_number"></var><br>
+<var style="">Price Per Message in Ether:</var><var style="background-color:#87CEEB;"id="price">0</var><br>
+
+
+
+</div>
+
+<div>
+  <button onclick="choose_account()" style="background-color:903030;color:white; width:130px;height:40px; font-size:13px;">Update</button><br>
+  Your Address: <var style="background-color:#87CEEB;"id="address"></var><br>
+  Your Balance: <var style="background-color:#87CEEB;"id="balance"></var>
+</div>
+<br><br>
+
+
+
+
+
+<br>
+
+
+
+
+<textarea id="text_message" style="width:1000px;height:500px;float:left;background-color:#87CEEB;"></textarea>
+
+<div style="float:left;">
+<input id="write_address" placeholder="Recipient Address" style="width:300px;"></input>
+Send a MSG Token<input type="checkbox" id="add_coin"><br>
+<textarea id="write_message" placeholder="Your Message" style="height:200px;width:400px;"></textarea><br>
+<button id="send_message_button" onclick="send_message()" style="height:50px;width:140px;font-size:15px;color:white;background-color:blue;">Send Message</button>
+Send On Enter
+<input type="checkbox" id="send_on_enter" value="Send On Enter">
+
+</div><br>
+<div  style="width:700px;float:left;margin-top:20px;">
+
+  <var>CodeName</var>
+  <input id="codeaddress" placeholder="Enter Address to be replaced" style="width:300px";></input>
+  <input id="codename" placeholder="Enter a Nickname for an address" style="width:200px";></input>
+  <button onclick="addCodeName()">Add Code Name</button>
+
+  <textarea id="codenamearea" style="width:700px;height:150px;"></textarea><br>
+  <input id="filter" style="width:300px;"></input>
+  <button onclick="addFilter()">Filter</button>
+  <button onclick="removeFilter()">Remove Filter</button>
+</div>
+
+
+<br>
+<br>
+
+
+
+
+
+
+<script>
+
+
+
+if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        }
+
+
+var EtherChat_c=web3.eth.contract([
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "min_payment",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "message_counter",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "index",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "start",
+				"type": "uint256"
+			}
+		],
+		"name": "get_my_message",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "get_Message_Number",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getMinPayment",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getBlock",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getBalance",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "creator",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "coin",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "rec_",
+				"type": "address"
+			},
+			{
+				"name": "mess_",
+				"type": "string"
+			},
+			{
+				"name": "coin",
+				"type": "bool"
+			}
+		],
+		"name": "add_message",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "amount_of_wei",
+				"type": "uint256"
+			}
+		],
+		"name": "change_min_payment",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "getMoney",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	}
+]);
+
+
+var EtherChat;
+
+web3.eth.defaultAccount = web3.eth.accounts[0];
+
+add_contract();
+
+var contract_address;
+
+
+
+var msg_c=0;
+var cc=0;
+var old_block=0;
+var my_address;
+var contract_access=false;
+
+var message_counter=0;
+var new_message_counter=0;
+
+var text="";
+var global_message_index=0;
+
+var restore_counter=0;
+var actual_restore_counter=0;
+
+var text_initialised=false;
+var price_per_message=0;
+
+
+document.getElementById("write_message").addEventListener("keydown", function(event)
+{
+
+    if (event.keyCode === 13&&document.getElementById("send_on_enter").checked==true)
+    {
+        event.preventDefault();
+        document.getElementById("send_message_button").click();
+    }
+});
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function add_contract()
+{
+contract_address=document.getElementById("c_address").value;
+document.getElementById("co_address").innerHTML=contract_address;
+EtherChat=EtherChat_c.at(contract_address,function(error, result){if(!error){console.log(result);contract_access=true;}else console.error(error);});
+
+EtherChat.creator(function(error, result){if(!error)document.getElementById("creator").innerHTML=result;else console.error(error);});
+
+
+choose_account();
+}
+
+function choose_account()
+{
+  web3.eth.defaultAccount=web3.eth.accounts[0];
+  my_address=web3.eth.defaultAccount;
+  message_counter=0;
+  global_message_index=0;
+  document.getElementById("text_message").value="";
+  text="";
+  update();
+}
+
+function update_messages()
+{
+  //document.getElementById("text_message").value="";
+  text="";
+  new_message_counter=0;
+  read_message(0,0);
+}
+
+function update()
+{
+
+
+  document.getElementById("address").innerHTML=my_address;
+  getBalance();
+
+  EtherChat.getBalance(function(error, result){if(!error)document.getElementById("money").innerHTML=(result.toNumber() / 1000000000000000000);else console.error(error);});
+  EtherChat.getBlock(function(error, result){if(!error)document.getElementById("block_number").innerHTML=result;else console.error(error);});
+  EtherChat.min_payment(function(error, result){if(!error){price_per_message=result;document.getElementById("price").innerHTML=price_per_message/ 1000000000000000000;}else console.error(error);});
+
+ text_initialised=false;
+  if(contract_access){listen_for_message();update_messages();}
+
+}
+
+function update2()
+{
+  EtherChat.getBalance(function(error, result){if(!error)document.getElementById("money").innerHTML=(result.toNumber() / 1000000000000000000);else console.error(error);});
+  EtherChat.getBlock(function(error, result){if(!error)document.getElementById("block_number").innerHTML=result;else console.error(error);});
+  EtherChat.min_payment(function(error, result){if(!error){price_per_message=result;document.getElementById("price").innerHTML=price_per_message/ 1000000000000000000;}else console.error(error);});
+
+  getBalance();
+  read_message(global_message_index,message_counter);
+}
+
+function getBalance (address) {
+return web3.eth.getBalance(web3.eth.accounts[0], function (error, result) {
+  if (!error) {
+    document.getElementById("balance").innerHTML=(result.toNumber() / 1000000000000000000 +" Ether");
+  } else {
+    console.error(error);
+  }
+})
+}
+
+
+
+
+function send_message()
+{
+  var sender_=web3.eth.defaultAccount;
+  var receiver_=document.getElementById("write_address").value;
+  var message_=document.getElementById("write_message").value;
+
+
+  EtherChat.add_message(receiver_,message_,document.getElementById("add_coin").checked,{from:sender_,gas:3000000,value:price_per_message},function(error, result){if(error) console.error(error);});
+}
+
+function getA()
+{
+  return 51;
+}
+
+
+
+
+
+
+
+
+async function read_message(index,msg_counter)
+{
+  var i=index;
+  var o=0;
+//return;
+
+
+
+
+  //while(true)
+  {
+    var result;
+    EtherChat.get_my_message(msg_counter,function(error, result2)
+    {
+      if(!error)
+      {
+        result=result2;
+
+        console.log(result)
+
+        if(result[0]==0)
+        {
+
+          if(msg_counter>message_counter||msg_counter==0)
+          {
+            global_message_index=index;
+            message_counter=msg_counter;
+            document.getElementById("text_message").value=text;
+            text_initialised=true;
+          }
+          return;
+          }
+
+
+        //i=r4;
+        //i++;
+
+        if(result[0]==my_address)
+        {
+          var codename_=findCodeName(result[1]);
+          if(codename_!="0")result[1]=codename_;
+          text+=("Block "+result[3]+" To  : "+result[1]+"   --  "+result[2]+"\n");
+        }
+        else if(result[1]==my_address)
+        {
+          var codename_=findCodeName(result[0]);
+          if(codename_!="0")result[0]=codename_;
+          text+=("Block "+result[3]+" From: "+result[0]+"   --  "+result[2]+"\n");
+        }
+        else {console.log("Error: Cant find address");text+=("ERROR: Can't find my address");return;}
+
+
+
+        var next=result[4];
+        next++;
+
+        if(result[4]!=9999)read_message(next,msg_counter+1);
+        //read_message(1);
+      }
+      else console.error(error);
+      //sleep(1000);
+      //read_message(r4);
+
+      //sleep(100);
+
+
+
+    });
+    o++;
+    return;
+
+
+    //await sleep(1000);
+
+
+
+
+    /*if(result[4]==9999)break;
+
+    i=result[4];
+    i++;
+/*
+    if(result[0]==my_address)text+=("To  : "+result[1]+"   --  "+result[2]+"\n");
+    else if(result[1]==my_address)text+=("From: "+result[0]+"   --  "+result[2]+"\n");
+    else {text+=("ERROR: Can't find my address");break;}
+*/
+
+  }
+
+}
+
+
+
+
+async function listen_for_message()
+{
+cc++;
+var c1=cc;
+
+while(c1==cc)
+{
+var new_block=0;
+
+EtherChat.getBlock(function(error, result){
+
+
+  if(!error){new_block=result;}else console.error(error);
+
+});
+
+await sleep(1000);
+
+console.log("OLD "+old_block+"    NEW "+new_block);
+if(new_block>old_block&&text_initialised==true)
+{
+  old_block=new_block;
+  console.log("New Block "+new_block);
+  update2();
+
+}
+//EtherChat.getBlock(function(error, result){if(!error)new_block=result;else console.error(error);});
+
+
+
+}
+}
+
+
+
+function addFilter()
+{
+  //var orig_text=document.getElementById("text_message").value;
+  var new_text="";
+
+  var filter=document.getElementById("filter").value;
+
+  var lines = document.getElementById("text_message").value.split('\n');
+  for(var i = 0;i < lines.length;i++)
+  {
+    if(lines[i].includes(filter)){new_text+=(lines[i]+'\n');}
+      //code here using lines[i] which will give you each line
+  }
+  document.getElementById("text_message").value=new_text;
+}
+
+
+function removeFilter()
+{
+  document.getElementById("filter").value="";
+  message_counter=0;
+  update_messages();
+}
+
+
+function addCodeName()
+{
+  var codename=document.getElementById("codename").value;
+  var codeaddress=document.getElementById("codeaddress").value;
+  document.getElementById("codenamearea").value+=(codename+":"+codeaddress+"\n");
+}
+
+function findCodeName(address_)
+{
+  var lines = document.getElementById("codenamearea").value.split('\n');
+  for(var i = 0;i < lines.length;i++)
+  {
+    if(lines[i].includes(address_))
+    {
+      var words=lines[i].split(":");
+      return words[0];
+    }
+
+  }
+
+  return "0";
+}
+
+</script>
+
+</body>
+
+
+</html>
