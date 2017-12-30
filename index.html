@@ -5,23 +5,23 @@
 </head>
 <body style="background-color:powderblue;">
 
+  <div style="border-style:solid;border-width:1px;float:right;">
+  <var >Insert the address of the EtherChat Contract:</var>
+  <input id="c_address"style="width:300px;height:20px;" value="0x14B94c46E2B8971361AB9B70d8482d732C4cfA68"></input>
+  <button style="height:20px;" onclick="add_contract()">Add</button><br>
+  <var style="">Contract Address:</var> <var style="background-color:#87CEEB;"id=co_address>0x14B94c46E2B8971361AB9B70d8482d732C4cfA68</var><br>
+  <var style="">Contract Creator:</var><var style="background-color:#87CEEB;"id="creator">0x123...</var>
+  <br>
+  <var style="">Ether in Contract:</var> <var style="background-color:#87CEEB;"id=money></var><br>
+  <var>Block Number:</var><var style="background-color:#87CEEB;margin-left:23px;"id="block_number"></var><br>
+  <var style="">Price Per Message in Ether:</var><var style="background-color:#87CEEB;"id="price">0</var><br>
+  </div>
+<h2>Welcome to the Ethereum Messenger</h2>
+Unlock your MetaMask and enter "0x14B94c46E2B8971361AB9B70d8482d732C4cfA68" as the contract.<br>
+Then you are able to write and read messages from and to any Ethereum Address.
 
 
-<div style="border-style:solid;border-width:1px;float:right;">
-<var style="">Insert the address of the EtherChat Contract:</var>
-<input id="c_address"style="width:300px;height:20px;" value="0x14B94c46E2B8971361AB9B70d8482d732C4cfA68"></input>
-<button style="height:20px;" onclick="add_contract()">Add</button><br>
-<var style="">Contract Address:</var> <var style="background-color:#87CEEB;"id=co_address>0x14B94c46E2B8971361AB9B70d8482d732C4cfA68</var><br>
-<var style="">Contract Creator:</var><var style="background-color:#87CEEB;"id="creator">0x123...</var>
-<br>
-<var style="">Ether in Contract:</var> <var style="background-color:#87CEEB;"id=money></var><br>
-<var>Block Number:</var><var style="background-color:#87CEEB;margin-left:23px;"id="block_number"></var><br>
-<var style="">Price Per Message in Ether:</var><var style="background-color:#87CEEB;"id="price">0</var><br>
-
-
-
-</div>
-
+<br><br>
 <div>
   <button onclick="choose_account()" style="background-color:903030;color:white; width:130px;height:40px; font-size:13px;">Update</button><br>
   Your Address: <var style="background-color:#87CEEB;"id="address"></var><br>
@@ -38,12 +38,21 @@
 
 
 
-<textarea id="text_message" style="width:1000px;height:500px;float:left;background-color:#87CEEB;"></textarea>
+<textarea id="text_message" style="width:1000px;height:500px;float:left;background-color:#87CEEB;" placeholder="Here you will see all your Messages"></textarea>
 
 <div style="float:left;">
 <input id="write_address" placeholder="Recipient Address" style="width:300px;"></input>
-Send a MSG Token<input type="checkbox" id="add_coin"><br>
-<textarea id="write_message" placeholder="Your Message" style="height:200px;width:400px;"></textarea><br>
+
+
+Send a MSG Token
+<input type="checkbox" id="add_coin"></input>
+<var style="color:black; background-color:#87CEEB; width:300px;" title="A Message Token (MSG) can be sent as an ERC20 Token to the recipient so he will see the Token in his account and is informed that he has received a message. This is recommended, if the receiver does not expect any message.">hover for info</var>
+
+
+<br>
+<textarea id="write_message" placeholder="Write a Message" style="height:200px;width:400px;"></textarea>
+
+<br>
 <button id="send_message_button" onclick="send_message()" style="height:50px;width:140px;font-size:15px;color:white;background-color:blue;">Send Message</button>
 Send On Enter
 <input type="checkbox" id="send_on_enter" value="Send On Enter">
@@ -424,7 +433,7 @@ function send_message()
   var message_=document.getElementById("write_message").value;
 
 
-  EtherChat.add_message(receiver_,message_,document.getElementById("add_coin").checked,{from:sender_,gas:3000000,value:price_per_message},function(error, result){if(error) console.error(error);});
+  EtherChat.add_message(receiver_,message_,document.getElementById("add_coin").checked,{from:sender_,gas:300000,gasPrice:3000000000,value:price_per_message},function(error, result){if(error) console.error(error);});
 }
 
 function getA()
@@ -451,7 +460,7 @@ async function read_message(index,msg_counter)
   //while(true)
   {
     var result;
-    EtherChat.get_my_message(msg_counter,function(error, result2)
+    EtherChat.get_my_message(i,function(error, result2)
     {
       if(!error)
       {
@@ -470,7 +479,7 @@ async function read_message(index,msg_counter)
             text_initialised=true;
           }
           return;
-          }
+        }
 
 
         //i=r4;
